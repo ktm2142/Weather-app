@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast {% if city_name %}for {{ city_name }}{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .weather-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .current-temp {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+        .forecast-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            text-align: center;
+            width: 18%;
+        }
+    </style>
+</head>
+<body {% if city_image %}style="background-image: url('{{ city_image }}');"{% endif %}>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <form method="get" class="mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="city" placeholder="Enter city name" value="{{ city_name }}">
+                    <button class="btn btn-primary" type="submit">Get Weather</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if current_conditions %}
+    <div class="weather-container">
+        <h1 class="text-center mb-4">Weather in {{ city_name }}</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Current Conditions</h2>
+                <div class="d-flex align-items-center">
+                    <span class="current-temp">{{ current_conditions.temperature }}°C</span>
+                    <i class="fas fa-sun fa-3x ms-3"></i>
+                </div>
+                <p class="lead">{{ current_conditions.weather_text }}</p>
+                <p><i class="fas fa-tint"></i> Humidity: {{ current_conditions.humidity }}%</p>
+                <p><i class="fas fa-wind"></i> Wind Speed: {{ current_conditions.wind_speed }} km/h</p>
+                <p><i class="fas fa-sun"></i> UV Index: {{ current_conditions.uv_index }}</p>
+            </div>
+            <div class="col-md-6">
+                <h2>5-Day Forecast</h2>
+                <div class="d-flex flex-wrap justify-content-between">
+                    {% for day in forecast %}
+                    <div class="forecast-card">
+                        <h5>{{ day.date|date:"l" }}</h5>
+                        <p>{{ day.date|date:"M d" }}</p>
+                        <i class="fas fa-cloud"></i>
+                        <p>{{ day.min_temperature }}°C - {{ day.max_temperature }}°C</p>
+                        <p>{{ day.weather_phrase }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% elif error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        Enter a city name to get weather information.
+    </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
