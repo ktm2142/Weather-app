@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from decouple import config
 
 load_dotenv()
 VISUALCROSSING_API_KEY = os.getenv('VISUALCROSSING_API_KEY')
@@ -84,11 +85,11 @@ WSGI_APPLICATION = 'src.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'my_weather_db',
-        'USER': 'postgres',
-        'PASSWORD': 'nopain5055',
-        'HOST': 'localhost',
-        'PORT': '54321',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
